@@ -1,0 +1,58 @@
+.article {
+    padding: 14px 14px;
+    width: 940px;
+    height: 140px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px 0 #00000026;
+    margin-bottom: 26px;
+
+    .articleHeader {
+        display: flex;
+        justify-content: space-between;
+
+        .headerArticleNameLink {
+            text-decoration: none;
+            color: #1890FF;
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .headerTagsContainer {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .headerUserInfo {
+            display: flex;
+            align-items: center;
+
+
+            .headerUserName {
+                font-size: 18px;
+                color: #000000D9;
+            }
+
+            .headerCreateDate {
+                font-size: 12px;
+                color: #00000080;
+            }
+
+            .headerUserLogo {
+                margin-left: 12px;
+                width: 46px;
+                border-radius: 50%;
+            }
+        }
+    }
+
+    .articleText {
+        color: #000000BF;
+        font-size: 12px;
+        line-height: 22px;
+        width: 680px;
+        height: 46px;
+        overflow: hidden;
+        overflow-wrap: break-word;
+    }
+}

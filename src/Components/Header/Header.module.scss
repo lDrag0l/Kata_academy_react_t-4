@@ -1,0 +1,73 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    height: 80px;
+    font-size: 18px;
+    margin-bottom: 26px;
+
+    .headerLeft {
+        padding-left: 22px;
+        font-weight: 400;
+    }
+
+    .headerRight {
+        display: flex;
+        align-items: center;
+        padding-right: 22px;
+        gap: 30px;
+
+        .headerSignUp {
+            color: #52C41A;
+            padding: 10px;
+            border: 1px solid #52C41A;
+            border-radius: 5px;
+        }
+
+        .LogOutButton {
+            background-color: #ffffff;
+            font-size: 18px;
+            padding: 12px 18px;
+            border-radius: 5px;
+            border: 1px solid #000000BF;
+            cursor: pointer;
+            transition: all 0.3s;
+
+            &:hover {
+                background-color: #d1d1d1bf;
+            }
+        }
+
+        .headerCreateArticleButton {
+            color: #52C41A;
+            border: 1px solid #52C41A;
+            border-radius: 5px;
+            padding: 5px;
+            transition: all 0.3s;
+
+            &:hover {
+                background-color: #f1ffe9;
+            }
+        }
+
+        .headerUserName {
+            margin-right: 5px;
+        }
+
+        .headerUserImage {
+            width: 46px;
+            border-radius: 50%;
+        }
+
+        .headerUserNameAndLogoContainer {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    a {
+        color: black;
+        text-decoration: none;
+    }
+}
