@@ -56,11 +56,37 @@
     }
 
     .articleText {
+        display: flex;
+        justify-content: space-between;
         color: #000000BF;
         font-size: 12px;
         line-height: 22px;
-        width: 680px;
+        width: 100%;
         margin-bottom: 25px;
+
+        .articleEditDeleteButtonsContainer {
+            display: flex;
+            gap: 12px;
+
+            button {
+                background-color: #FFFFFF;
+                cursor: pointer;
+                border-radius: 5px;
+                border: 1px solid transparent;
+                padding: 5px 15px;
+            }
+
+            .buttonDelete {
+                color: #F5222D;
+                border-color: #F5222D;
+            }
+
+            .buttonEdit {
+                color: #52C41A;
+                border-color: #52C41A;
+            }
+        }
+
     }
 
     .resetStyles :global(*) {

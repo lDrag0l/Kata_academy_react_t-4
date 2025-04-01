@@ -1,5 +1,4 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
-import { fetchArticles } from "../../Redux/features/Articles/Async/asyncFetch"
 import { useEffect, } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
@@ -10,27 +9,24 @@ import SignUpForm from "../SignUpForm"
 import ArticleContainer from "../ArticleContainer"
 import DetailedArticle from '../DetailedArticle'
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute'
+import EditCreateArticleForm from "../EditCreateArticleForm/EditCreateArticleForm"
 
 import { logInFromLocalStorage } from "../../Redux/features/Authentication/AuthenticationSlice"
 
 import s from './App.module.scss'
-import EditCreateArticleForm from "../EditCreateArticleForm/EditCreateArticleForm"
 
 function App() {
   const dispatch = useDispatch()
 
-  const offset = useSelector(state => state.articles.offset)
   const token = useSelector(state => state.authentication.accountData.token)
 
-  useEffect(() => {
-    dispatch(fetchArticles(offset))
-  }, [dispatch, offset])
 
   useEffect(() => {
     if (localStorage.getItem('user')) {
       dispatch(logInFromLocalStorage(JSON.parse(localStorage.getItem('user'))))
     }
   }, [dispatch])
+
 
   return (
     <BrowserRouter>

@@ -22,8 +22,6 @@ const EditCreateArticleForm = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    console.log(error)
-
     useEffect(() => {
         if (loading) {
             messageApi.open({

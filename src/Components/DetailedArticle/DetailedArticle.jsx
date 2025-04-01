@@ -1,9 +1,9 @@
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { format, parseISO } from 'date-fns'
 
-import { fetchCurrentArticle } from '../../Redux/features/Articles/Async/asyncFetch'
+import { fetchCurrentArticle, deleteArticle } from '../../Redux/features/Articles/Async/asyncFetch'
 
 import s from './DetailedArticle.module.scss'
 
@@ -20,8 +20,10 @@ function DetailedArticle() {
     const { slug } = useParams()
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const { currentArticle, loading, error } = useSelector((state) => state.articles)
+    const { token } = useSelector(state => state.authentication.accountData)
 
     useEffect(() => {
         dispatch(fetchCurrentArticle(slug))
@@ -37,6 +39,15 @@ function DetailedArticle() {
         formattedDate = format(date, 'MMMM d, yyyy');
 
         articleMarkdownText = <Markdown className={s.resetStyles}>{currentArticle.body}</Markdown>
+    }
+
+    const handleDeleteButton = () => {
+        dispatch(deleteArticle([slug, token]))
+        navigate('/articles', { replace: true });
+    }
+
+    const handleEditButton = () => {
+        console.log('Edit button')
     }
 
     currentArticle ? renderContent =
@@ -75,6 +86,10 @@ function DetailedArticle() {
                 <p>
                     {currentArticle.description}
                 </p>
+                <div className={s.articleEditDeleteButtonsContainer}>
+                    <button onClick={handleDeleteButton} type='button' className={s.buttonDelete}>Delete</button>
+                    <button onClick={handleEditButton} type='button' className={s.buttonEdit}>Edit</button>
+                </div>
             </div>
             <div>
                 {articleMarkdownText}

@@ -67,7 +67,7 @@ export const deleteArticle = createAsyncThunk(
     'articles/deleteArticle',
     async ([articleSlug, token], { rejectWithValue }) => {
         try {
-            const response = await fetch(`https://blog-platform.kata.academy/api/articles${articleSlug}`,
+            const response = await fetch(`https://blog-platform.kata.academy/api/articles/${articleSlug}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -75,10 +75,8 @@ export const deleteArticle = createAsyncThunk(
                         'Authorization': `Token ${token}`
                     }
                 })
-            if (!response.ok) console.log('Delete article failed')
 
-            const data = await response.json()
-            return data
+            if (!response.ok) console.log('Delete article failed')
 
         } catch (error) {
             return rejectWithValue(error.message)

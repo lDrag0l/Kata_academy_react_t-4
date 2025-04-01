@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 import { fetchArticles, fetchCurrentArticle, createArticle, deleteArticle } from './Async/asyncFetch'
 
@@ -15,7 +15,9 @@ const initialState = {
 
     totalPages: null,
     isCreated: false,
-    createdEditArticleSlug: null
+    createdEditArticleSlug: null,
+
+    isArticleDeleted: false
 }
 
 const articlesSlice = createSlice({
@@ -29,6 +31,9 @@ const articlesSlice = createSlice({
         },
         isCreatedUpdatedReload: (state) => {
             state.isCreated = false
+        },
+        isArticleDeletedReload: (state) => {
+            state.isArticleDeleted = false
         }
     },
 
@@ -92,6 +97,8 @@ const articlesSlice = createSlice({
             })
             .addCase(deleteArticle.fulfilled, (state) => {
                 state.loading = false
+                state.currentArticle = null
+                state.isArticleDeleted = true
             })
             .addCase(deleteArticle.rejected, (state, action) => {
                 state.error = action.payload
@@ -101,7 +108,7 @@ const articlesSlice = createSlice({
     }
 })
 
-export const { setCurrentPage, isCreatedUpdatedReload } = articlesSlice.actions
+export const { setCurrentPage, isCreatedUpdatedReload, isArticleDeletedReload, createdEditArticleSlugReload } = articlesSlice.actions
 
 
 export default articlesSlice.reducer
