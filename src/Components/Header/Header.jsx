@@ -31,7 +31,7 @@ function Header() {
     </>
         :
         <>
-            <Link to="/">
+            <Link to="/new-article">
                 <div className={s.headerCreateArticleButton}>
                     Create article
                 </div>

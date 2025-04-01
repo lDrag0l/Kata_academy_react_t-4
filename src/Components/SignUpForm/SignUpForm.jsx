@@ -34,7 +34,7 @@ function SignUpForm() {
         } else {
             messageApi.destroy('loading');
         }
-    }, [loading, messageApi]);
+    }, [loading, messageApi, messageApi.destroy]);
 
     useEffect(() => {
         if (error?.username || error?.email) {
@@ -44,7 +44,7 @@ function SignUpForm() {
                 duration: 3,
             });
         }
-    }, [error, messageApi]);
+    }, [error, messageApi, messageApi.destroy, messageApi.error]);
 
     useEffect(() => {
         if (accountData.token) {
@@ -52,7 +52,7 @@ function SignUpForm() {
             localStorage.setItem('user', JSON.stringify(accountData))
             navigate('/articles', { replace: true })
         }
-    }, [accountData, navigate])
+    }, [accountData, navigate, messageApi, messageApi.destroy])
 
     useEffect(() => {
         if (accountData.token) {
@@ -60,7 +60,7 @@ function SignUpForm() {
             localStorage.setItem('user', JSON.stringify(accountData))
             navigate('/articles', { replace: true })
         }
-    }, [accountData])
+    }, [accountData, messageApi.destroy, navigate])
 
     let password = watch('password')
 

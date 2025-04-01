@@ -53,7 +53,7 @@ function SignInForm() {
             localStorage.setItem('user', JSON.stringify(accountData))
             navigate('/articles', { replace: true })
         }
-    }, [accountData, navigate])
+    }, [accountData, navigate, messageApi])
 
     return (
         <>

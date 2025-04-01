@@ -25,10 +25,6 @@ function EditProfileForm() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    useEffect(() => {
-        if (!accountData.token) navigate('/sign-in', { replace: true })
-    }, [])
-
     const onSubmit = (data) => {
         const formatDate = { ...data, }
         formatDate.email = formatDate.email.toLowerCase()
@@ -149,8 +145,6 @@ function EditProfileForm() {
                     Save
                 </button>
             </form>
-
-            {loading && <span>Loading...</span>}
         </>
     );
 }
