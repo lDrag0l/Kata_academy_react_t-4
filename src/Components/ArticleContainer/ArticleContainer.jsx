@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 
-import { setCurrentPage } from '../../Redux/features/Articles/ArticlesSlice';
+import { currentArticleReload, setCurrentPage } from '../../Redux/features/Articles/ArticlesSlice';
 import { fetchArticles } from "../../Redux/features/Articles/Async/asyncFetch"
 import { isArticleDeletedReload } from '../../Redux/features/Articles/ArticlesSlice'
 
@@ -14,11 +14,13 @@ const ArticleContainer = () => {
 
     const offset = useSelector(state => state.articles.offset)
     const flagDelete = useSelector(state => state.articles.isArticleDeleted)
+    const currentArticle = useSelector(state => state.articles.currentArticle)
 
     useEffect(() => {
         dispatch(fetchArticles(offset))
         if (flagDelete) dispatch(isArticleDeletedReload())
-    }, [dispatch, offset, flagDelete])
+        if (currentArticle) dispatch(currentArticleReload())
+    }, [dispatch, offset, flagDelete, currentArticle])
 
     const { articles, loading, error, currentPage, totalPages } = useSelector((state) => state.articles)
 

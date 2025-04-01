@@ -1,6 +1,6 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-import { fetchArticles, fetchCurrentArticle, createArticle, deleteArticle } from './Async/asyncFetch'
+import { fetchArticles, fetchCurrentArticle, createArticle, deleteArticle, updateArticle } from './Async/asyncFetch'
 
 const initialState = {
     articles: [],
@@ -30,10 +30,13 @@ const articlesSlice = createSlice({
             else state.offset = (state.currentPage - 1) * 5
         },
         isCreatedUpdatedReload: (state) => {
-            state.isCreated = false
+            state.isCreated = initialState.isCreated
         },
         isArticleDeletedReload: (state) => {
-            state.isArticleDeleted = false
+            state.isArticleDeleted = initialState.isArticleDeleted
+        },
+        currentArticleReload: (state) => {
+            state.currentArticle = initialState.currentArticle
         }
     },
 
@@ -95,12 +98,37 @@ const articlesSlice = createSlice({
                 state.loading = true
                 state.error = null
             })
-            .addCase(deleteArticle.fulfilled, (state) => {
-                state.loading = false
-                state.currentArticle = null
-                state.isArticleDeleted = true
+            .addCase(deleteArticle.fulfilled, (state, action) => {
+                if (action.payload.error === '403') {
+                    state.error = '403';
+                } else {
+                    state.currentArticle = null;
+                    state.isArticleDeleted = true;
+                }
+                state.loading = false;
             })
             .addCase(deleteArticle.rejected, (state, action) => {
+                state.error = action.payload;
+                state.loading = false;
+            })
+
+            //update article
+            .addCase(updateArticle.pending, (state) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(updateArticle.fulfilled, (state, action) => {
+                if (action.payload.errors) {
+                    state.error = action.payload.errors.message
+                }
+                else {
+                    state.createdEditArticleSlug = action.payload.article.slug
+                    state.isCreated = true
+                    state.error = null
+                    state.loading = false
+                }
+            })
+            .addCase(updateArticle.rejected, (state, action) => {
                 state.error = action.payload
                 state.loading = false
             })
@@ -108,7 +136,7 @@ const articlesSlice = createSlice({
     }
 })
 
-export const { setCurrentPage, isCreatedUpdatedReload, isArticleDeletedReload, createdEditArticleSlugReload } = articlesSlice.actions
+export const { setCurrentPage, isCreatedUpdatedReload, isArticleDeletedReload, createdEditArticleSlugReload, currentArticleReload } = articlesSlice.actions
 
 
 export default articlesSlice.reducer

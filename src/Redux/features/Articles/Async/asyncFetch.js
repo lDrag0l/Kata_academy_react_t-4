@@ -67,16 +67,56 @@ export const deleteArticle = createAsyncThunk(
     'articles/deleteArticle',
     async ([articleSlug, token], { rejectWithValue }) => {
         try {
-            const response = await fetch(`https://blog-platform.kata.academy/api/articles/${articleSlug}`,
+            const response = await fetch(
+                `https://blog-platform.kata.academy/api/articles/${articleSlug}`,
                 {
-                    method: "DELETE",
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Token ${token}`,
+                    },
+                }
+            );
+
+            if (response.status === 403) {
+                return { error: '403' };
+            }
+
+            if (!response.ok) console.log('Delete article failed')
+
+            return { slug: articleSlug };
+
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const updateArticle = createAsyncThunk(
+    'articles/updateArticle',
+    async ([article, token, slug], { rejectWithValue }) => {
+        try {
+            const response = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}`,
+                {
+                    method: "PUT",
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Token ${token}`
-                    }
+                    },
+                    body: JSON.stringify({
+                        article: {
+                            title: article.title,
+                            description: article.description,
+                            body: article.body,
+                            tagList: article.tags
+                        }
+                    })
                 })
+            if (!response.ok) console.log('Updating article failed')
 
-            if (!response.ok) console.log('Delete article failed')
+            const data = await response.json()
+
+            return data
 
         } catch (error) {
             return rejectWithValue(error.message)

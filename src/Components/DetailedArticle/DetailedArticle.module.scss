@@ -68,12 +68,14 @@
             display: flex;
             gap: 12px;
 
-            button {
+            button,
+            .buttonEdit {
                 background-color: #FFFFFF;
                 cursor: pointer;
                 border-radius: 5px;
                 border: 1px solid transparent;
                 padding: 5px 15px;
+                max-height: 31px;
             }
 
             .buttonDelete {
@@ -82,6 +84,7 @@
             }
 
             .buttonEdit {
+                text-decoration: none;
                 color: #52C41A;
                 border-color: #52C41A;
             }

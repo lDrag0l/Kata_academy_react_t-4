@@ -42,6 +42,7 @@ function App() {
             <Route element={<ProtectedRoute token={token} />}>
               <Route path="/profile" element={<EditProfileForm />} />
               <Route path="/new-article" element={<EditCreateArticleForm />} />
+              <Route path="/articles/:slug/edit" element={<EditCreateArticleForm />} />
             </Route>
           </Routes>
         </div>

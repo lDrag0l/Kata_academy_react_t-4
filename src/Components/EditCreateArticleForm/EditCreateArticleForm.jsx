@@ -2,25 +2,55 @@ import s from './EditCreateArticleForm.module.scss'
 
 import { useForm } from 'react-hook-form';
 import { message } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { createArticle } from '../../Redux/features/Articles/Async/asyncFetch';
-import { useNavigate } from 'react-router-dom';
+import { createArticle, fetchCurrentArticle, updateArticle } from '../../Redux/features/Articles/Async/asyncFetch';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { isCreatedUpdatedReload } from './../../Redux/features/Articles/ArticlesSlice'
 
 const EditCreateArticleForm = () => {
-    const [tagsInput, setTagsInput] = useState([0])
-
-    const { register, handleSubmit, formState: { errors }, } = useForm();
-
-    const { token } = useSelector(state => state.authentication.accountData)
-    const { loading, error, isCreated, createdEditArticleSlug } = useSelector(state => state.articles)
-
-    const [messageApi, contextHolder] = message.useMessage();
+    const { slug } = useParams()
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
+    const { token } = useSelector(state => state.authentication.accountData)
+
+    const { loading, error, isCreated, createdEditArticleSlug } = useSelector(state => state.articles)
+    const { currentArticle } = useSelector(state => state.articles)
+
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const initialTags = useMemo(() =>
+        currentArticle?.tagList?.map((_, i) => i) || [0],
+        [currentArticle?.tagList]
+    );
+
+    const [tagsInput, setTagsInput] = useState(initialTags);
+
+    const defaultValues = useMemo(() => ({
+        title: currentArticle?.title || "",
+        shortDescription: currentArticle?.description || "",
+        text: currentArticle?.body || "",
+        ...(currentArticle?.tagList?.reduce((acc, tag, i) => {
+            acc[`tag${i}`] = tag;
+            return acc;
+        }, {}) || {})
+    }), [currentArticle]);
+
+    const { register, handleSubmit, formState: { errors }, reset, getValues } = useForm({
+        defaultValues
+    });
+
+    useEffect(() => {
+        reset(defaultValues);
+        setTagsInput(initialTags);
+    }, [currentArticle, reset, defaultValues, initialTags]);
+
+    useEffect(() => {
+        if (slug) dispatch(fetchCurrentArticle(slug))
+    }, [dispatch, slug])
 
     useEffect(() => {
         if (loading) {
@@ -39,7 +69,7 @@ const EditCreateArticleForm = () => {
         if (error) {
             messageApi.destroy('loading');
             messageApi.error({
-                content: 'Create article error',
+                content: slug ? 'Update article error' : 'Create article error',
                 duration: 3,
             });
         }
@@ -54,11 +84,10 @@ const EditCreateArticleForm = () => {
     }, [isCreated, navigate, dispatch, isCreatedUpdatedReload]);
 
     const onSubmit = (data) => {
-
         const tags = Object.keys(data)
             .filter(key => key.startsWith("tag"))
             .map(key => data[key])
-            .filter(value => value.trim() !== "");
+            .filter(value => value && value.trim() !== "");
 
         const formattedData = {
             title: data.title,
@@ -66,24 +95,30 @@ const EditCreateArticleForm = () => {
             body: data.text,
             tags: tags
         }
-        dispatch(createArticle([formattedData, token]))
+        if (slug) dispatch(updateArticle([formattedData, token, slug]))
+        else dispatch(createArticle([formattedData, token]))
     }
 
     const addNewTag = () => {
-        setTagsInput((prev) => {
-            return [...prev, prev.length]
-        })
-    }
+        setTagsInput(prev => [...prev, prev.length]);
+    };
 
     const deleteTag = (indexToRemove) => {
-        setTagsInput((prev) => prev.filter((_, index) => index !== indexToRemove));
-    }
+        setTagsInput(prev => {
+            const newTags = prev.filter((_, i) => i !== indexToRemove);
+            reset({
+                ...getValues(),
+                [`tag${indexToRemove}`]: undefined
+            });
+            return newTags;
+        });
+    };
 
     return (
         <>
             {contextHolder}
             <form className={s.form} onSubmit={handleSubmit(onSubmit)}>
-                <h2 className={s.formLabel}>Create new article</h2>
+                <h2 className={s.formLabel}>{slug ? 'Edit' : 'Create'} article</h2>
 
                 <label className={`${s.inputLabel} ${errors.title ? s.errorLabel : ''}`}>
                     Title
@@ -121,35 +156,46 @@ const EditCreateArticleForm = () => {
                     />
                     {errors.text && <span className={s.spanValidateError}>{errors.text.message}</span>}
                 </label>
-                {!tagsInput.length && <button type='button' onClick={addNewTag} className={s.addFirstTag}>Add new tag</button>}
+
                 {tagsInput.map((item, id) => {
-                    if (id == (tagsInput.length - 1))
-                        return (
-                            <div className={s.tagInput} key={id}>
-                                <label className={s.inputTag}>
-                                    <input
-                                        {...register(`tag${item}`, {
-                                        })}
-                                        placeholder='Tag'
-                                    />
-                                </label>
-                                <button type='button' onClick={() => deleteTag(id)} className={s.tagDeleteButton}>Delete</button>
-                                <button type='button' onClick={addNewTag} className={s.tagAddButton}>Add tag</button>
-                            </div>
-                        )
-                    else return (
+                    const isLast = id === (tagsInput.length - 1);
+                    return (
                         <div className={s.tagInput} key={id}>
                             <label className={s.inputTag}>
                                 <input
-                                    {...register(`tag${item}`, {
-                                    })}
+                                    {...register(`tag${item}`)}
                                     placeholder='Tag'
                                 />
                             </label>
-                            <button type='button' onClick={() => deleteTag(id)} className={s.tagDeleteButton}>Delete</button>
+                            <button
+                                type='button'
+                                onClick={() => deleteTag(id)}
+                                className={s.tagDeleteButton}
+                            >
+                                Delete
+                            </button>
+                            {isLast && (
+                                <button
+                                    type='button'
+                                    onClick={addNewTag}
+                                    className={s.tagAddButton}
+                                >
+                                    Add tag
+                                </button>
+                            )}
                         </div>
                     )
                 })}
+
+                {!tagsInput.length && (
+                    <button
+                        type='button'
+                        onClick={addNewTag}
+                        className={s.addFirstTag}
+                    >
+                        Add new tag
+                    </button>
+                )}
 
                 <button
                     className={s.formSubmitButton}
