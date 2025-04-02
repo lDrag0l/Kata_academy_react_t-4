@@ -4,6 +4,8 @@ import { currentArticleReload, setCurrentPage } from '../../Redux/features/Artic
 import { fetchArticles } from "../../Redux/features/Articles/Async/asyncFetch"
 import { isArticleDeletedReload } from '../../Redux/features/Articles/ArticlesSlice'
 
+import { message } from 'antd';
+
 import Article from '../Article'
 
 import { ConfigProvider, Pagination } from "antd";
@@ -16,6 +18,8 @@ const ArticleContainer = () => {
     const flagDelete = useSelector(state => state.articles.isArticleDeleted)
     const currentArticle = useSelector(state => state.articles.currentArticle)
 
+    const [messageApi, contextHolder] = message.useMessage();
+
     useEffect(() => {
         dispatch(fetchArticles(offset))
         if (flagDelete) dispatch(isArticleDeletedReload())
@@ -24,7 +28,19 @@ const ArticleContainer = () => {
 
     const { articles, loading, error, currentPage, totalPages } = useSelector((state) => state.articles)
 
-    if (loading) return <>Loading...</>
+    useEffect(() => {
+        if (loading) {
+            messageApi.open({
+                key: 'loading',
+                type: 'loading',
+                content: 'Loading articles in progress...',
+                duration: 0,
+            });
+        } else {
+            messageApi.destroy('loading');
+        }
+    }, [loading, messageApi]);
+
 
     if (error) return <>{error.message}</>
 
@@ -34,6 +50,7 @@ const ArticleContainer = () => {
 
     return (
         <>
+            {contextHolder}
             {articles.map((item) => {
                 return <Article key={item.slug} article={item} />
             })}

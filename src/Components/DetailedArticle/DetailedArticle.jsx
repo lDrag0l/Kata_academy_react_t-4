@@ -2,7 +2,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { format, parseISO } from 'date-fns'
-import { message } from 'antd';
+import { message, Popconfirm } from 'antd';
 
 import { fetchCurrentArticle, deleteArticle } from '../../Redux/features/Articles/Async/asyncFetch'
 
@@ -26,6 +26,8 @@ function DetailedArticle() {
     let date
     let formattedDate
     let articleMarkdownText
+
+    const text = 'Are you sure to delete this article?';
 
     useEffect(() => {
         dispatch(fetchCurrentArticle(slug))
@@ -109,7 +111,15 @@ function DetailedArticle() {
                     {currentArticle.description}
                 </p>
                 <div className={s.articleEditDeleteButtonsContainer}>
-                    <button onClick={handleDeleteButton} type='button' className={s.buttonDelete}>Delete</button>
+                    <Popconfirm
+                        placement="rightTop"
+                        title={text}
+                        okText="Yes"
+                        cancelText="No"
+                        onConfirm={handleDeleteButton}
+                    >
+                        <button type='button' className={s.buttonDelete}>Delete</button>
+                    </Popconfirm>
                     <Link to={`/articles/${slug}/edit`} type='button' className={s.buttonEdit}>Edit</Link>
                 </div>
             </div>
