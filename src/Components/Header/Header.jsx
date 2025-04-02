@@ -49,7 +49,7 @@ function Header() {
 
     return (
         <header className={s.header}>
-            <Link to="/" className={s.headerLeft}>
+            <Link to="/articles" className={s.headerLeft}>
                 Realworld Blog
             </Link>
 
