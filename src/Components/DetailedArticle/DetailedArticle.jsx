@@ -22,7 +22,7 @@ function DetailedArticle() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const { currentArticle, loading, error, isArticleDeleted, isArticleFavoritedUnfavorited } = useSelector((state) => state.articles)
+    const { currentArticle, loading, error, isArticleDeleted } = useSelector((state) => state.articles)
 
     const { token } = useSelector(state => state.authentication.accountData)
     const { username } = useSelector(state => state.authentication.accountData)

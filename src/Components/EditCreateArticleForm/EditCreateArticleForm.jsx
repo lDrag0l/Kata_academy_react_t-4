@@ -49,7 +49,7 @@ const EditCreateArticleForm = () => {
     }, [currentArticle, reset, defaultValues, initialTags]);
 
     useEffect(() => {
-        if (slug) dispatch(fetchCurrentArticle(slug))
+        if (slug) dispatch(fetchCurrentArticle([slug]))
     }, [dispatch, slug])
 
     useEffect(() => {

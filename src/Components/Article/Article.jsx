@@ -9,6 +9,7 @@ import Tag from './Tag'
 import { useDispatch, useSelector } from 'react-redux';
 import { favoriteUnfavoriteCurrentArticle } from '../../Redux/features/Articles/Async/asyncFetch';
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 
 function Article({ article }) {
@@ -85,4 +86,23 @@ function Article({ article }) {
         </div>
     )
 }
+
+Article.propTypes = {
+    article: PropTypes.shape({
+        slug: PropTypes.string,
+        title: PropTypes.string,
+        description: PropTypes.string,
+        body: PropTypes.string,
+        favorited: PropTypes.bool,
+        favoritesCount: PropTypes.number,
+        updatedAt: PropTypes.string,
+        tagList: PropTypes.arrayOf(PropTypes.string),
+        author: PropTypes.shape({
+            username: PropTypes.string,
+            image: PropTypes.string,
+            following: PropTypes.bool
+        })
+    })
+};
+
 export default Article
