@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
 import s from './Header.module.scss'
-import userImage from '../../assets/userNoImage.svg'
 
 import { logOut } from '../../Redux/features/Authentication/AuthenticationSlice'
 
@@ -39,7 +38,7 @@ function Header() {
 
             <Link to="/profile" className={s.headerUserNameAndLogoContainer}>
                 <span className={s.headerUserName}>{user.username}</span>
-                <img className={s.headerUserImage} src={user.image ? user.image : userImage} alt="Logo" />
+                <img className={s.headerUserImage} src={user.image ? user.image : 'https://static.productionready.io/images/smiley-cyrus.jpg'} alt="Logo" />
             </Link>
 
             <button onClick={handleLogOutButtonClick} className={s.LogOutButton}>

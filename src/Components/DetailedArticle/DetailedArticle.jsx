@@ -111,63 +111,62 @@ function DetailedArticle() {
         }
     }
 
-    currentArticle ? renderContent =
-        <div className={s.article}>
-            <div className={s.articleHeader}>
-                <div>
-                    <div className={s.articleTitleContainer}>
-                        <div className={s.headerArticleNameLink}>
-                            {currentArticle.title}
-                        </div>
-                        <span className={s.articleLikeCounts}>
-                            <img onClick={handleLike} onMouseEnter={likeHoverHandler} onMouseLeave={unLikeHoverHandler} className={s.like} src={localFavorited ? unlike : like} alt={localFavorited ? "Unlike" : "Like"} />
-                            {localFavoritesCount}
-                        </span>
-                    </div>
-                    <div className={s.headerTagsContainer}>
-                        {currentArticle.tagList.map((tag, index) => {
-                            return <Tag key={index} text={tag} />
-                        })}
-                    </div>
-
-                </div>
-                <div className={s.headerUserInfo}>
+    if (currentArticle) {
+        renderContent =
+            <div className={s.article}>
+                <div className={s.articleHeader}>
                     <div>
-                        <div className={s.headerUserName}>
-                            {currentArticle.author.username}
+                        <div className={s.articleTitleContainer}>
+                            <div className={s.headerArticleNameLink}>
+                                {currentArticle.title}
+                            </div>
+                            <span className={s.articleLikeCounts}>
+                                <img onClick={handleLike} onMouseEnter={likeHoverHandler} onMouseLeave={unLikeHoverHandler} className={s.like} src={localFavorited ? unlike : like} alt={localFavorited ? "Unlike" : "Like"} />
+                                {localFavoritesCount}
+                            </span>
                         </div>
-                        <div className={s.headerCreateDate}>
-                            {formattedDate}
+                        <div className={s.headerTagsContainer}>
+                            {currentArticle.tagList.map((tag, index) => {
+                                return <Tag key={index} text={tag} />
+                            })}
                         </div>
+
                     </div>
-                    <img src={currentArticle.author.image} alt="logo" className={s.headerUserLogo} />
+                    <div className={s.headerUserInfo}>
+                        <div>
+                            <div className={s.headerUserName}>
+                                {currentArticle.author.username}
+                            </div>
+                            <div className={s.headerCreateDate}>
+                                {formattedDate}
+                            </div>
+                        </div>
+                        <img src={currentArticle.author.image} alt="logo" className={s.headerUserLogo} />
+                    </div>
                 </div>
-            </div>
-            <div className={s.articleText}>
-                <p>
-                    {currentArticle.description}
-                </p>
-                {userArticle && <div className={s.articleEditDeleteButtonsContainer}>
-                    <Popconfirm
-                        placement="rightTop"
-                        title={text}
-                        okText="Yes"
-                        cancelText="No"
-                        onConfirm={handleDeleteButton}
-                    >
-                        <button type='button' className={s.buttonDelete}>Delete</button>
-                    </Popconfirm>
-                    <Link to={`/articles/${slug}/edit`} type='button' className={s.buttonEdit}>Edit</Link>
-                </div>}
-            </div>
-            <div>
-                {articleMarkdownText}
-            </div>
+                <div className={s.articleText}>
+                    <p>
+                        {currentArticle.description}
+                    </p>
+                    {userArticle && <div className={s.articleEditDeleteButtonsContainer}>
+                        <Popconfirm
+                            placement="rightTop"
+                            title={text}
+                            okText="Yes"
+                            cancelText="No"
+                            onConfirm={handleDeleteButton}
+                        >
+                            <button type='button' className={s.buttonDelete}>Delete</button>
+                        </Popconfirm>
+                        <Link to={`/articles/${slug}/edit`} type='button' className={s.buttonEdit}>Edit</Link>
+                    </div>}
+                </div>
+                <div className={s.markDownText}>
+                    {articleMarkdownText}
+                </div>
 
-        </div>
-        :
-        <>Loading</>
-
+            </div>
+    }
     return (
         <>
             {contextHolder}

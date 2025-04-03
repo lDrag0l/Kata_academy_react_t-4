@@ -107,4 +107,8 @@
         margin: revert;
         border: revert;
     }
+
+    .markDownText {
+        overflow-wrap: break-word;
+    }
 }
