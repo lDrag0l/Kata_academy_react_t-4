@@ -61,7 +61,7 @@ function EditProfileForm() {
             messageApi.destroy;
             navigate('/articles', { replace: true });
         }
-    }, [accountData, isUpdated, navigate, dispatch, isUpdatedReload]);
+    }, [accountData, isUpdated, navigate, dispatch, isUpdatedReload(), loading, messageApi.destroy]);
 
     return (
         <>

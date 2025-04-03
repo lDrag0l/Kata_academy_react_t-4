@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { fetchArticles, fetchCurrentArticle, createArticle, deleteArticle, updateArticle } from './Async/asyncFetch'
+import { fetchArticles, fetchCurrentArticle, createArticle, deleteArticle, updateArticle, favoriteUnfavoriteCurrentArticle } from './Async/asyncFetch'
 
 const initialState = {
     articles: [],
@@ -17,7 +17,9 @@ const initialState = {
     isCreated: false,
     createdEditArticleSlug: null,
 
-    isArticleDeleted: false
+    isArticleDeleted: false,
+
+    isArticleFavoritedUnfavorited: false
 }
 
 const articlesSlice = createSlice({
@@ -37,6 +39,9 @@ const articlesSlice = createSlice({
         },
         currentArticleReload: (state) => {
             state.currentArticle = initialState.currentArticle
+        },
+        articleIsFavoritedUnfavoritedReload: (state) => {
+            state.isArticleFavoritedUnfavorited = initialState.isArticleFavoritedUnfavorited
         }
     },
 
@@ -132,11 +137,36 @@ const articlesSlice = createSlice({
                 state.error = action.payload
                 state.loading = false
             })
+            //favorite / unfavorite
+            .addCase(favoriteUnfavoriteCurrentArticle.pending, (state) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(favoriteUnfavoriteCurrentArticle.fulfilled, (state, action) => {
+                state.loading = false;
+
+                if (state.currentArticle?.slug === action.payload.article.slug) {
+                    state.currentArticle = action.payload.article;
+                }
+
+                state.articles = state.articles.map(item =>
+                    item.slug === action.payload.article.slug
+                        ? action.payload.article
+                        : item
+                );
+
+                state.isArticleFavoritedUnfavorited = true;
+            })
+            .addCase(favoriteUnfavoriteCurrentArticle.rejected, (state, action) => {
+                state.error = action.payload
+                state.loading = false
+            })
+
 
     }
 })
 
-export const { setCurrentPage, isCreatedUpdatedReload, isArticleDeletedReload, createdEditArticleSlugReload, currentArticleReload } = articlesSlice.actions
+export const { setCurrentPage, isCreatedUpdatedReload, isArticleDeletedReload, createdEditArticleSlugReload, currentArticleReload, articleIsFavoritedUnfavoritedReload } = articlesSlice.actions
 
 
 export default articlesSlice.reducer

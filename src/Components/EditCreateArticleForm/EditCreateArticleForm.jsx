@@ -73,7 +73,7 @@ const EditCreateArticleForm = () => {
                 duration: 3,
             });
         }
-    }, [error, messageApi]);
+    }, [error, messageApi, slug]);
 
     useEffect(() => {
         if (!loading && isCreated && !error) {
@@ -81,7 +81,7 @@ const EditCreateArticleForm = () => {
             messageApi.destroy;
             navigate(`/articles/${createdEditArticleSlug}`, { replace: true });
         }
-    }, [isCreated, navigate, dispatch, isCreatedUpdatedReload]);
+    }, [isCreated, navigate, messageApi.destroy, error, loading, createdEditArticleSlug]);
 
     const onSubmit = (data) => {
         const tags = Object.keys(data)

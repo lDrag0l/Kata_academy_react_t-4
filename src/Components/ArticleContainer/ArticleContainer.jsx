@@ -1,8 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 
-import { currentArticleReload, setCurrentPage } from '../../Redux/features/Articles/ArticlesSlice';
+import { currentArticleReload, setCurrentPage, isArticleDeletedReload, articleIsFavoritedUnfavoritedReload } from '../../Redux/features/Articles/ArticlesSlice';
 import { fetchArticles } from "../../Redux/features/Articles/Async/asyncFetch"
-import { isArticleDeletedReload } from '../../Redux/features/Articles/ArticlesSlice'
 
 import { message } from 'antd';
 
@@ -15,18 +14,22 @@ const ArticleContainer = () => {
     const dispatch = useDispatch()
 
     const offset = useSelector(state => state.articles.offset)
+    const { token } = useSelector(state => state.authentication.accountData)
     const flagDelete = useSelector(state => state.articles.isArticleDeleted)
     const currentArticle = useSelector(state => state.articles.currentArticle)
 
     const [messageApi, contextHolder] = message.useMessage();
 
+    const { articles, loading, error, currentPage, totalPages, isArticleFavoritedUnfavorited } = useSelector((state) => state.articles)
+
     useEffect(() => {
-        dispatch(fetchArticles(offset))
+        dispatch(fetchArticles([offset, token]))
         if (flagDelete) dispatch(isArticleDeletedReload())
         if (currentArticle) dispatch(currentArticleReload())
-    }, [dispatch, offset, flagDelete, currentArticle])
+        if (isArticleFavoritedUnfavorited) dispatch(articleIsFavoritedUnfavoritedReload())
+    }, [dispatch, offset, flagDelete, currentArticle, token, isArticleFavoritedUnfavorited])
 
-    const { articles, loading, error, currentPage, totalPages } = useSelector((state) => state.articles)
+
 
     useEffect(() => {
         if (loading) {

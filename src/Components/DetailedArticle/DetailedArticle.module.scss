@@ -53,6 +53,16 @@
                 border-radius: 50%;
             }
         }
+
+        .articleTitleContainer {
+            display: flex;
+
+            .articleLikeCounts {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+        }
     }
 
     .articleText {

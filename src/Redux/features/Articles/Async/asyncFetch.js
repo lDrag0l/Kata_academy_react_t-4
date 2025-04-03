@@ -2,10 +2,17 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 
 export const fetchArticles = createAsyncThunk(
     'articles/fetchArticles',
-    async (offset, { rejectWithValue }) => {
-        try {
-            const response = await fetch(`https://blog-platform.kata.academy/api/articles?limit=5&offset=${offset}`)
+    async ([offset, token = false], { rejectWithValue }) => {
+        const options = {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token && { 'Authorization': `Token ${token}` })
+            }
+        };
 
+        try {
+            const response = await fetch(`https://blog-platform.kata.academy/api/articles?limit=5&offset=${offset}`, options)
             const data = await response.json()
 
             return data
@@ -18,9 +25,16 @@ export const fetchArticles = createAsyncThunk(
 
 export const fetchCurrentArticle = createAsyncThunk(
     'articles/fetchCurrentArticle',
-    async (slug, { rejectWithValue }) => {
+    async ([slug, token], { rejectWithValue }) => {
+        const options = {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token && { 'Authorization': `Token ${token}` })
+            }
+        };
         try {
-            const response = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}`)
+            const response = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}`, options)
 
             const data = await response.json()
 
@@ -113,6 +127,30 @@ export const updateArticle = createAsyncThunk(
                     })
                 })
             if (!response.ok) console.log('Updating article failed')
+
+            const data = await response.json()
+
+            return data
+
+        } catch (error) {
+            return rejectWithValue(error.message)
+        }
+    }
+)
+
+export const favoriteUnfavoriteCurrentArticle = createAsyncThunk(
+    'articles/favoriteCurrentArticle',
+    async ([slug, favorite, token], { rejectWithValue }) => {
+        const method = favorite ? 'DELETE' : 'POST'
+
+        try {
+            const response = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}/favorite`, {
+                method: `${method}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`
+                },
+            })
 
             const data = await response.json()
 

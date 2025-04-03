@@ -1,28 +1,61 @@
 import { format, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
+import like from './../../assets/like.svg'
+import unlike from './../../assets/unlike.svg'
 
 import s from './Article.module.scss'
 
 import Tag from './Tag'
+import { useDispatch, useSelector } from 'react-redux';
+import { favoriteUnfavoriteCurrentArticle } from '../../Redux/features/Articles/Async/asyncFetch';
+import { useEffect, useState } from 'react';
+
 
 function Article({ article }) {
+    const dispatch = useDispatch()
 
+    const token = useSelector(state => state.authentication.accountData.token)
     const { author } = article
 
     const date = parseISO(article.updatedAt);
-
     const formattedDate = format(date, 'MMMM d, yyyy');
+
+    const [localFavorited, setLocalFavorited] = useState(article.favorited)
+    const [localFavoritesCount, setLocalFavoritesCount] = useState(article.favoritesCount)
+
+    useEffect(() => {
+        setLocalFavorited(article.favorited)
+        setLocalFavoritesCount(article.favoritesCount)
+    }, [article.favorited, article.favoritesCount])
+
+    const handleLike = () => {
+        if (token) {
+            dispatch(favoriteUnfavoriteCurrentArticle([article.slug, localFavorited, token]))
+        }
+    }
+
+    const likeHoverHandler = (e) => {
+        if (!localFavorited && token) {
+            e.target.src = unlike;
+        }
+    }
+    const unLikeHoverHandler = (e) => {
+        if (token) {
+            e.target.src = localFavorited ? unlike : like;
+        }
+    }
 
     return (
         <div className={s.article}>
             <div className={s.articleHeader}>
                 <div>
-                    <div>
+                    <div className={s.articleTitleContainer}>
                         <Link to={`/articles/${article.slug}`} className={s.headerArticleNameLink}>
                             {article.title}
                         </Link>
-                        <span>
-                            {article.favoritesCount}
+                        <span className={s.articleLikeCounts}>
+                            <img onClick={handleLike} onMouseEnter={likeHoverHandler} onMouseLeave={unLikeHoverHandler} className={s.like} src={localFavorited ? unlike : like} alt={localFavorited ? "Unlike" : "Like"} />
+                            {localFavoritesCount}
                         </span>
                     </div>
                     <div className={s.headerTagsContainer}>
@@ -30,7 +63,6 @@ function Article({ article }) {
                             return <Tag key={index} text={tag} />
                         })}
                     </div>
-
                 </div>
                 <div className={s.headerUserInfo}>
                     <div>
