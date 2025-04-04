@@ -14,11 +14,11 @@ const initialState = {
     currentPage: 1,
 
     totalPages: null,
-    isCreated: false,
+
     createdEditArticleSlug: null,
 
+    isCreated: false,
     isArticleDeleted: false,
-
     isArticleFavoritedUnfavorited: false
 }
 

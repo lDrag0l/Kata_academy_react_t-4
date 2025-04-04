@@ -3,16 +3,19 @@ import { createAccount, logInAccount, editProfileData } from './Async/asyncFetch
 
 const initialState = {
     loading: false,
+
     error: {
         username: null,
         email: null
     },
+
     accountData: {
         username: null,
         email: null,
         token: null,
         image: null
     },
+
     isUpdated: false
 }
 

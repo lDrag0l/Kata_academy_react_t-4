@@ -1,14 +1,18 @@
 import { format, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
+
 import like from './../../assets/like.svg'
 import unlike from './../../assets/unlike.svg'
 
 import s from './Article.module.scss'
 
 import Tag from './Tag'
+
 import { useDispatch, useSelector } from 'react-redux';
-import { favoriteUnfavoriteCurrentArticle } from '../../Redux/features/Articles/Async/asyncFetch';
 import { useEffect, useState } from 'react';
+
+import { favoriteUnfavoriteCurrentArticle } from '../../Redux/features/Articles/Async/asyncFetch';
+
 import PropTypes from 'prop-types';
 
 

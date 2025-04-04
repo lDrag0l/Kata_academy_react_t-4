@@ -48,6 +48,7 @@ export const logInAccount = createAsyncThunk(
                     })
                 })
             if (!response.ok) console.log('Login failed')
+
             const data = await response.json()
 
             return data

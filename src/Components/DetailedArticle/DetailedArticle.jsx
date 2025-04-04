@@ -1,7 +1,10 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
+
 import { format, parseISO } from 'date-fns'
+import Markdown from 'markdown-to-jsx'
+
 import { message, Popconfirm } from 'antd';
 
 import like from './../../assets/like.svg'
@@ -13,8 +16,6 @@ import { favoriteUnfavoriteCurrentArticle } from '../../Redux/features/Articles/
 import s from './DetailedArticle.module.scss'
 
 import Tag from '../Article/Tag'
-
-import Markdown from 'markdown-to-jsx'
 
 function DetailedArticle() {
     const { slug } = useParams()
@@ -31,16 +32,17 @@ function DetailedArticle() {
 
     const [localFavorited, setLocalFavorited] = useState(false)
     const [localFavoritesCount, setLocalFavoritesCount] = useState(0)
+
     let renderContent
     let date
     let formattedDate
     let articleMarkdownText
     let userArticle = false
+    const text = 'Are you sure to delete this article?';
 
     if (currentArticle) {
         userArticle = currentArticle.author.username == username
     }
-    const text = 'Are you sure to delete this article?';
 
     useEffect(() => {
         dispatch(fetchCurrentArticle([slug, token]))

@@ -20,13 +20,11 @@ function App() {
 
   const token = useSelector(state => state.authentication.accountData.token)
 
-
   useEffect(() => {
     if (localStorage.getItem('user')) {
       dispatch(logInFromLocalStorage(JSON.parse(localStorage.getItem('user'))))
     }
   }, [dispatch])
-
 
   return (
     <BrowserRouter>

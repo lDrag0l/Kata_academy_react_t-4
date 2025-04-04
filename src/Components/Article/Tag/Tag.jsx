@@ -9,8 +9,10 @@ function Tag({ text = '' }) {
         </div>
     )
 }
-export default Tag
 
 Tag.propTypes = {
     text: PropTypes.string
 }
+
+export default Tag
+

@@ -2,11 +2,11 @@ import s from './EditProfileForm.module.scss'
 
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { editProfileData } from '../../Redux/features/Authentication/Async/asyncFetch';
 import { isUpdatedReload } from '../../Redux/features/Authentication/AuthenticationSlice'
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { message } from 'antd';
 

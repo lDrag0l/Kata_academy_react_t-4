@@ -29,8 +29,6 @@ const ArticleContainer = () => {
         if (isArticleFavoritedUnfavorited) dispatch(articleIsFavoritedUnfavoritedReload())
     }, [dispatch, offset, flagDelete, currentArticle, token, isArticleFavoritedUnfavorited])
 
-
-
     useEffect(() => {
         if (loading) {
             messageApi.open({
@@ -43,7 +41,6 @@ const ArticleContainer = () => {
             messageApi.destroy('loading');
         }
     }, [loading, messageApi]);
-
 
     if (error) return <>{error.message}</>
 

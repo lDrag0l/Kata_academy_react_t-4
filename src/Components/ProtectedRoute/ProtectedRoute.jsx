@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+
 import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = ({ token = '' }) => {

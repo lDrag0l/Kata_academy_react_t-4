@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createAccount } from '../../Redux/features/Authentication/Async/asyncFetch';
 
 import s from './SignUpForm.module.scss'
+
 import { message } from 'antd';
 
 function SignUpForm() {
