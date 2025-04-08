@@ -30,15 +30,25 @@ const EditCreateArticleForm = () => {
 
     const [tagsInput, setTagsInput] = useState(initialTags);
 
-    const defaultValues = useMemo(() => ({
-        title: currentArticle?.title || "",
-        shortDescription: currentArticle?.description || "",
-        text: currentArticle?.body || "",
-        ...(currentArticle?.tagList?.reduce((acc, tag, i) => {
-            acc[`tag${i}`] = tag;
-            return acc;
-        }, {}) || {})
-    }), [currentArticle]);
+    const defaultValues = useMemo(() => {
+        if (slug && currentArticle) {
+            return {
+                title: currentArticle?.title || "",
+                shortDescription: currentArticle?.description || "",
+                text: currentArticle?.body || "",
+                ...(currentArticle?.tagList?.reduce((acc, tag, i) => {
+                    acc[`tag${i}`] = tag;
+                    return acc;
+                }, {}) || {})
+            };
+        }
+        return {
+            title: "",
+            shortDescription: "",
+            text: "",
+            tag0: ""
+        };
+    }, [slug, currentArticle]);
 
     const { register, handleSubmit, formState: { errors }, reset, getValues } = useForm({
         defaultValues
